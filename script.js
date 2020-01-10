@@ -1,4 +1,4 @@
-// Initialize ALL global variables here
+// Initialize ALL global variables here:
 
 // This code here selects a random word
 const wordList = [

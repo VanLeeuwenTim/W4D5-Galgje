@@ -1,6 +1,3 @@
-// Initialize ALL global variables here:
-
-// This code here selects a random word
 const wordList = [
   "vis",
   "toeter",
@@ -10,62 +7,32 @@ const wordList = [
   "snoer",
   "geeuw"
 ];
-let maxAmount = 5;
-
-let word;
-const wordpicker = function(list) {
-  let word = "sinaasappel";
-  let index = Math.floor(Math.random() * list.length);
-  const x = list;
-  console.log("wat ben ik?", word);
-  return x[index];
-};
-
-let inputs;
-const wordGuessed = function(word, inputs) {
-  // remove all letters from word that are already guessed
-  // We can do this with a for loop to.
-  let remaining = word.filter(function(letter) {
-    // If the letter is guessed return true (we want to remove that right away)
-    return !inputs.includes(letter);
-  });
-  // If we have letters left, right?
-  return remaining.length === 0;
-};
-
-const clean = function() {
-  document.querySelector("input").value = "";
-};
-
-let gameOver;
-const winTheGame = function() {
-  document.querySelector(".win").style.display = "block";
-  gameOver = true;
-};
-
-const lose4 = function() {
-  document.querySelector(".lose").style.display = "block";
-  gameOver = true;
-};
-
-const spanTheWord1 = function(word) {
-  document.querySelector(".lose p span").innerHTML = `"${word.join("")}"`;
-};
-
 let tries = 0;
+let maxTries = 5;
+
+const beginTheGame = function() {
+  document.querySelector("input").value = "";
+  document.querySelector(".lives span").innerHTML = 5 - 0;
+  word = pickRandomWord(wordList).split("");
+  triedLetters = [];
+  showCorrectlyGuessedLetters(word, triedLetters);
+  showIncorrectGuessedLetters(word, triedLetters);
+};
+
+const pickRandomWord = function(list) {
+  let index = Math.floor(Math.random() * list.length);
+  return list[index];
+};
+
+const checkIfWordContainsLetter = function(word, letter) {
+  return word.includes(letter);
+};
+
 const updateTriesDisplay = function(tries) {
   document.querySelector(".lives span").innerHTML = 5 - tries;
 };
 
-const lettersInTheRow = function(word, inputs) {
-  let wrongLetters = inputs.filter(function(letter) {
-    // If the letter is in the word return.... false/true (we want to remove that then)
-    return !word.includes(letter);
-  });
-  document.querySelector(".guessed_letters").innerHTML = wrongLetters.join(" ");
-};
-
-const showWord = function(word, inputLetterWords) {
+const showCorrectlyGuessedLetters = function(word, inputLetterWords) {
   let display = word.map(function(letter) {
     if (inputLetterWords.includes(letter)) {
       return letter;
@@ -76,55 +43,58 @@ const showWord = function(word, inputLetterWords) {
   document.querySelector(".the_word").innerHTML = display.join(" ");
 };
 
+const showIncorrectGuessedLetters = function(word, triedLetters) {
+  let wrongLetters = triedLetters.filter(function(letter) {
+    return !word.includes(letter);
+  });
+  document.querySelector(".guessed_letters").innerHTML = wrongLetters.join(" ");
+};
+
 const guessLetter = function() {
-  if (gameOver) {
-    return;
-  }
-  const input1 = document.querySelector("input").value;
+  const newInput = document.querySelector("input").value;
   document.querySelector("input").value = "";
 
-  if (inputs.includes(input1) || input1 === "") {
+  if (triedLetters.includes(newInput) || newInput === "") {
+    alert("Deze heb je al geprobeerd");
     return;
   }
 
-  if (!word.includes(input1)) {
+  if (!word.includes(newInput)) {
     tries++;
-    document.querySelector(".lives span").innerHTML = 5 - tries;
+    updateTriesDisplay(tries);
   }
 
-  inputs.push(input1);
-  showWord(word, inputs);
-  lettersInTheRow(word, inputs);
+  triedLetters.push(newInput);
+  showCorrectlyGuessedLetters(word, triedLetters);
+  showIncorrectGuessedLetters(word, triedLetters);
 
-  if (wordGuessed(word, inputs)) {
+  if (wordGuessed(word, triedLetters)) {
     winTheGame();
-  } else if (tries >= maxAmount) {
-    lose4();
+  } else if (tries >= maxTries) {
+    loseTheGame();
   }
 };
 
-const beginTheGameWithPlayer = function(player1) {
-  gameOver = false;
-  document.querySelector(".win").style.display = "none";
-  document.querySelector(".lose").style.display = "none";
-  document.querySelector("input").value = "";
+const wordGuessed = function(word, triedLetters) {
+  let remaining = word.filter(function(letter) {
+    return !triedLetters.includes(letter);
+  });
+  return remaining.length === 0;
+};
 
-  word = wordpicker(wordList).split("");
+const winTheGame = function() {
+  document.querySelector(".win").style.display = "block";
+};
+
+const loseTheGame = function() {
+  document.querySelector(".lose").style.display = "block";
   document.querySelector(".lose p span").innerHTML = `"${word.join("")}"`;
-  word;
-
-  tries = 0;
-  document.querySelector(".lives span").innerHTML = 5 - 0;
-
-  inputs = [];
-  showWord(word, inputs);
-  lettersInTheRow(word, inputs);
 };
 
 document.addEventListener("DOMContentLoaded", function() {
   document.querySelector(".guess").addEventListener("click", guessLetter);
-  document
-    .querySelector(".restart")
-    .addEventListener("click", beginTheGameWithPlayer);
-  beginTheGameWithPlayer();
+  document.querySelector(".restart").addEventListener("click", beginTheGame);
+  beginTheGame();
 });
+
+module.exports = wordGuessed;

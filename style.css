@@ -1,6 +1,29 @@
+body {
+  background: lightgray;
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  grid-template-rows: 33% 33% 33%;
+  grid-gap: 20px;
+}
+
+h1 {
+  grid-column-start: 1;
+}
+
+button {
+  background: lightpink;
+}
+
+button:hover {
+  background: lightgreen;
+  cursor: pointer;
+  transition-delay: 1s;
+}
+
 .win,
 .lose {
   display: none;
+  background: blue;
 }
 
 .win h2 {

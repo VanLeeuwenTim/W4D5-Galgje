@@ -11,8 +11,6 @@ let tries = 0;
 let maxTries = 5;
 
 const beginTheGame = function() {
-  document.querySelector(".win").style.display = "none";
-  document.querySelector(".lose").style.display = "none";
   document.querySelector("input").value = "";
   document.querySelector(".lives span").innerHTML = 5 - 0;
   word = pickRandomWord(wordList).split("");
@@ -63,7 +61,7 @@ const guessLetter = function() {
 
   if (!word.includes(newInput)) {
     tries++;
-    document.querySelector(".lives span").innerHTML = 5 - tries;
+    updateTriesDisplay(tries);
   }
 
   triedLetters.push(newInput);
@@ -81,7 +79,6 @@ const wordGuessed = function(word, triedLetters) {
   let remaining = word.filter(function(letter) {
     return !triedLetters.includes(letter);
   });
-
   return remaining.length === 0;
 };
 
@@ -100,4 +97,4 @@ document.addEventListener("DOMContentLoaded", function() {
   beginTheGame();
 });
 
-// module.exports = checkIfWordContainsLetter;
+module.exports = wordGuessed;

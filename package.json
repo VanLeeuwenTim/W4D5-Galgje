@@ -1,0 +1,23 @@
+{
+  "name": "W4D5-Galgje",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VanLeeuwenTim/W4D5-Galgje.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VanLeeuwenTim/W4D5-Galgje/issues"
+  },
+  "homepage": "https://github.com/VanLeeuwenTim/W4D5-Galgje#readme",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}
